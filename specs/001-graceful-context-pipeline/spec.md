@@ -83,6 +83,15 @@ As a Go developer, I want to optionally process inputs in batches using a batch 
 
 ## Requirements *(mandatory)*
 
+## Clarifications
+
+### Session 2025-12-24
+
+- Q: What should the source contract be? → A: Source is `func(ctx context.Context) (<-chan T, error)`; pipeline reads until channel closes or ctx cancels.
+- Q: When a stage errors or ctx is cancelled, what happens to in-flight items? → A: Stop input + cancel upstream; finish processing items already in internal buffers/between stages (best-effort, bounded by ctx).
+- Q: Should user-defined processor/sink handlers receive raw `T` or `Feed[T]`? → A: Raw `T` (Feed is internal transport only).
+- Q: What should be the default concurrency per stage? → A: Default to 1 worker per stage; user can override per stage.
+
 ## Constitution Compliance *(mandatory)*
 
 Summarize how this feature complies with `.specify/memory/constitution.md`:
@@ -101,23 +110,31 @@ Summarize how this feature complies with `.specify/memory/constitution.md`:
 ### Functional Requirements
 
 - **FR-001**: System MUST allow users to define a source (generator), one or more processors, and a sink using generic handler function types.
+- **FR-001a**: Source contract MUST be `func(ctx context.Context) (<-chan T, error)` (read-only channel). The source MUST close the channel to signal completion.
 - **FR-002**: System MUST pass data between stages internally (via channels or equivalent concurrency primitives) without requiring user-written glue code.
 - **FR-003**: System MUST propagate a root context to all stages and support graceful shutdown on context cancellation.
 - **FR-004**: System MUST provide a compile-time configuration API that makes invalid pipeline wiring difficult or impossible.
 - **FR-005**: System MUST support both single-item handlers and batch handlers for processing stages.
+- **FR-005a**: Processor and sink handler signatures MUST operate on the raw payload type `T` (not `Feed[T]`) to minimize user boilerplate; `Feed[T]` is used internally for stage-to-stage transport.
 - **FR-006**: System MUST surface execution outcomes to callers, including success, cancellation, and error results.
-- **FR-007**: System MUST define and document an error policy for stage failures (e.g., stop-on-first-error by default).
+- **FR-007**: System MUST define and document an error policy for stage failures.
+- **FR-007a**: Default error policy MUST be stop-on-first-error.
+- **FR-007b**: On error/cancellation, the pipeline MUST stop accepting new inputs promptly, cancel upstream work, and best-effort finish items already buffered/in-flight inside the pipeline, bounded by the root context.
 - **FR-008**: System MUST ensure pipeline shutdown does not leak goroutines and that internal channels are closed deterministically.
 - **FR-009**: System MUST allow naming a pipeline and include that name in the per-item feed metadata.
+- **FR-009a**: Default stage concurrency MUST be 1 worker per stage when not explicitly configured.
+- **FR-009b**: The API MUST allow overriding concurrency per stage at pipeline construction time.
 - **FR-010**: System MUST keep the core library free of non-standard-library runtime dependencies.
 - **FR-011**: System MUST provide at least one runnable example demonstrating a minimal source → processor → sink pipeline.
 
 ### Assumptions
 
 - Default error policy is stop-on-first-error, returning the first encountered error to the caller.
-- Default cancellation policy is: stop accepting new inputs promptly upon cancellation and finish in-flight work best-effort, bounded by the root context.
+- Default cancellation policy is: stop accepting new inputs promptly upon cancellation, cancel upstream work, and best-effort finish items already buffered/in-flight inside the pipeline, bounded by the root context.
 - Ordering is not guaranteed unless explicitly stated by a pipeline configuration option.
 - Batch behavior is opt-in and has a deterministic batch boundary policy (e.g., fixed batch size).
+- The pipeline wraps each produced `T` into a `Feed[T]` for internal stage-to-stage transport (RootCtx + PipelineName + Data), but user handlers are not required to handle `Feed[T]`.
+- Unless configured otherwise, each stage runs with 1 worker (single goroutine) and uses internal buffering defaults that avoid unbounded memory growth.
 
 ### Key Entities *(include if feature involves data)*
 
