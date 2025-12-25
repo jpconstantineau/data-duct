@@ -31,7 +31,14 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+Plans MUST include a short "Constitution Compliance" statement derived from
+`.specify/memory/constitution.md`, covering:
+
+- Library-first packaging and reusable boundaries
+- Test-first approach (tests written first, initially failing)
+- `core` dependency constraints (stdlib-only imports)
+- Quality gates (formatting, static analysis, security checks, tests, coverage)
+- Example(s) included for the feature
 
 ## Project Structure
 
@@ -56,39 +63,32 @@ specs/[###-feature]/
 -->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
+# [REMOVE IF UNUSED]  Single feature (DEFAULT)
+cmd/        Main applications for this project.
+└── example/
 
-tests/
-├── contract/
-├── integration/
-└── unit/
 
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
+internal/   Private application and library code. This is the code you don't want others importing in their applications or libraries.
+├── packagename/
+├── packagename/
+└── packagename/
 
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
+pkg/        Library code that's ok to use by external applications
+├── packagename/
+├── packagename/
+└── packagename/
 
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
+scripts/    Scripts to perform various build, install, analysis, etc operations.
+└── feature1/
 
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+test/       Additional external test apps and test data.
+└── feature1/
+
+docs/       Design and user documents
+└── feature1/
+
+assets/     Other assets to go along with your repository (datasets, etc).
+└── feature1/
 ```
 
 **Structure Decision**: [Document the selected structure and reference the real

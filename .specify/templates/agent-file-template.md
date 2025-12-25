@@ -26,3 +26,8 @@ Auto-generated from all feature plans. Last updated: [DATE]
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->
+
+## Constitution
+
+All development guidelines and generated artifacts MUST comply with
+`.specify/memory/constitution.md`.

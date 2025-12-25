@@ -1,50 +1,105 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+
+- Version change: (template) -> 0.1.0
+- Modified principles:
+	- Principle 1 -> Library-First & Reusable
+	- Principle 2 -> Test-First (TDD) (NON-NEGOTIABLE)
+	- Principle 3 -> Core Has No Runtime Dependencies
+	- Principle 4 -> Spec-Kit-Driven Development
+	- Principle 5 -> Quality Gates & Clean Architecture
+- Added sections: Additional Constraints, Development Workflow
+- Removed sections: none
+- Templates requiring updates:
+	- .specify/templates/plan-template.md ✅ updated
+	- .specify/templates/spec-template.md ✅ updated
+	- .specify/templates/tasks-template.md ✅ updated
+	- .specify/templates/checklist-template.md ✅ updated
+	- .specify/templates/agent-file-template.md ✅ updated
+- Follow-up TODOs:
+	- RATIFICATION_DATE: TODO (original adoption date unknown)
+-->
+
+# data-duct Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### Library-First & Reusable
+Every feature MUST begin as a standalone, reusable library (a package/module that can be used
+independently). Features MUST avoid entangling business logic with integrations; integration
+adapters are separate packages.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+Each feature/library MUST include:
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+- A minimal public API with clear responsibilities
+- Complete tests
+- Developer documentation
+- At least one runnable example demonstrating intended usage
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### Test-First (TDD) (NON-NEGOTIABLE)
+Development MUST be test-first:
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+- Tests MUST be written before implementation.
+- Tests MUST fail before implementation is written.
+- A feature is NOT complete until all tests are complete and passing.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### Core Has No Runtime Dependencies
+The `core` library MUST have no runtime dependencies beyond the Go standard library.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+Practically, this means:
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+- `core` packages MUST NOT import third-party modules.
+- Any integrations (cloud SDKs, DB clients, queue clients, etc.) MUST live outside `core`.
+- `core` MUST define interfaces/contracts that adapters implement.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### Spec-Kit-Driven Development
+All new features MUST be developed using the spec-kit methodology.
+
+Feature work MUST be traceable:
+
+`specs/[###-feature-name]/spec.md` → `plan.md` → `tasks.md` → implementation + tests + examples
+
+### Quality Gates & Clean Architecture
+The library MUST follow clean code and clean architecture practices.
+
+All new/changed code MUST pass:
+
+- Code formatting (Go: `gofmt` and typically `goimports`)
+- Static analysis (e.g., `golangci-lint`)
+- Security checks (e.g., `govulncheck`)
+- Unit tests (`go test ./...`)
+- Code coverage checks (thresholds defined by project governance)
+
+The repository MUST be organized according to golang-standards/project-layout.
+
+## Additional Constraints
+
+- Developer-facing documentation MUST be kept current and actionable.
+- Each feature MUST include examples showing how to use it.
+- Keep the core small and dependency-free; push integrations to adapters.
+
+## Development Workflow
+
+- All changes MUST be driven by spec-kit artifacts (spec → plan → tasks).
+- PRs MUST demonstrate test-first development (tests added first, then implementation).
+- CI MUST enforce formatting, linting/static analysis, security checks, unit tests, and
+	coverage gates.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes other conventions when conflicts exist.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+Amendments
+
+- Changes MUST be proposed via PR with rationale and migration plan (if needed).
+- `CONSTITUTION_VERSION` follows semantic versioning:
+	- MAJOR: backward-incompatible governance change or removal/redefinition of principles
+	- MINOR: new principle/section or material expansion
+	- PATCH: clarifications/wording/typos without semantic change
+
+Compliance
+
+- Feature plans MUST include a "Constitution Check" section based on this document.
+- Reviews MUST verify compliance, and document any approved exceptions.
+
+**Version**: 0.1.0 | **Ratified**: TODO(RATIFICATION_DATE): original adoption date unknown | **Last Amended**: 2025-12-24

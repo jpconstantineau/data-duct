@@ -77,6 +77,16 @@
 
 ## Requirements *(mandatory)*
 
+## Constitution Compliance *(mandatory)*
+
+Summarize how this feature complies with `.specify/memory/constitution.md`:
+
+- Library-first: standalone reusable package boundary
+- Test-first: tests written first and initially failing
+- Core independence: if touching `core`, confirm stdlib-only imports
+- Quality gates: formatting, linting/static analysis, security checks, tests, coverage
+- Docs/examples: at least one runnable example
+
 <!--
   ACTION REQUIRED: The content in this section represents placeholders.
   Fill them out with the right functional requirements.
