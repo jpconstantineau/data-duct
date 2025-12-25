@@ -20,6 +20,20 @@ Build and run a minimal pipeline:
 3. Attach a sink via `To(...)`.
 4. Run with a root context.
 
+## Minimal Usage (Concrete)
+
+```go
+src := func(ctx context.Context) (<-chan int, error) { /* ... */ }
+proc := func(ctx context.Context, n int) (string, error) { /* ... */ }
+sink := func(ctx context.Context, s string) error { /* ... */ }
+
+runnable := pipeline.New("example", src).
+	Then(proc).
+	To(sink)
+
+res, err := runnable.Run(ctx)
+```
+
 ## Expected Commands (once implementation exists)
 
 ```powershell
@@ -31,6 +45,9 @@ Build and run a minimal pipeline:
 
 # security
  govulncheck ./...
+
+# run example
+ go run ./cmd/graceful-context-pipeline-example
 ```
 
 ## Example (once implementation exists)
@@ -40,3 +57,4 @@ A runnable example will live under:
 - `cmd/graceful-context-pipeline-example`
 
 and demonstrate source → processor → sink with cancellation.
+

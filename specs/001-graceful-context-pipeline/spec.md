@@ -2,8 +2,8 @@
 
 **Feature Branch**: `001-graceful-context-pipeline`  
 **Created**: 2025-12-24  
-**Status**: Draft  
-**Input**: Build a library to abstract infrastructure components needed for a channel-based concurrent context-aware pipeline that handles shutdown gracefully. Users define a source/generator, processor(s), and a sink handler. The library passes data between stages and is configured at compile time via a simple API. Stages use generic handlers (Handler, BatchHandler, StartHandler, EndHandler). Data is wrapped in a Feed containing RootCtx, PipelineName, and Data.
+**Status**: Implemented  
+**Input**: Build a library to abstract infrastructure components needed for a channel-based concurrent context-aware pipeline that handles shutdown gracefully. Users define a source/generator, processor(s), and a sink handler. The library passes data between stages and is configured via a simple fluent API. User code supplies ordinary typed Go functions; the library validates handler signatures and stage-to-stage type compatibility when building the pipeline.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -22,7 +22,7 @@
 
 ### User Story 1 - Build and run a minimal pipeline (Priority: P1)
 
-As a Go developer building a data pipeline, I want to connect a source, one or multiple processors, and a sink using a simple, compile-time configuration API so that I can build a working concurrent pipeline with minimal boilerplate.
+As a Go developer building a data pipeline, I want to connect a source, one or multiple processors, and a sink using a simple fluent configuration API so that I can build a working concurrent pipeline with minimal boilerplate.
 
 **Why this priority**: This is the MVP that proves the library removes boilerplate while remaining safe and predictable.
 
@@ -81,6 +81,10 @@ As a Go developer, I want to optionally process inputs in batches using a batch 
 - Backpressure: downstream is slower than upstream.
 - Multiple stages with different concurrency settings.
 
+### Implementation Notes (Learned)
+
+- To support the desired builder style (`pipeline.New(...).Then(...).To(...)`), the library validates handler signatures and stage compatibility at pipeline build time and fails fast on invalid wiring.
+
 ## Requirements *(mandatory)*
 
 ## Clarifications
@@ -91,6 +95,11 @@ As a Go developer, I want to optionally process inputs in batches using a batch 
 - Q: When a stage errors or ctx is cancelled, what happens to in-flight items? → A: Stop input + cancel upstream; finish processing items already in internal buffers/between stages (best-effort, bounded by ctx).
 - Q: Should user-defined processor/sink handlers receive raw `T` or `Feed[T]`? → A: Raw `T` (Feed is internal transport only).
 - Q: What should be the default concurrency per stage? → A: Default to 1 worker per stage; user can override per stage.
+
+### Session 2025-12-25
+
+- Q: Should the builder support readable sequential chaining without embedding `New(...)` in `Then(...)`? → A: Yes, the supported style is `pipeline.New("name", source).Then(process).To(sink)`.
+- Q: How is stage type safety enforced with that builder shape? → A: The library validates handler function signatures and stage-to-stage compatibility when stages are added, failing fast if invalid.
 
 ## Constitution Compliance *(mandatory)*
 
@@ -109,11 +118,11 @@ Summarize how this feature complies with `.specify/memory/constitution.md`:
 
 ### Functional Requirements
 
-- **FR-001**: System MUST allow users to define a source (generator), one or more processors, and a sink using generic handler function types.
+- **FR-001**: System MUST allow users to define a source (generator), one or more processors, and a sink using ordinary typed Go functions with expected signatures.
 - **FR-001a**: Source contract MUST be `func(ctx context.Context) (<-chan T, error)` (read-only channel). The source MUST close the channel to signal completion.
 - **FR-002**: System MUST pass data between stages internally (via channels or equivalent concurrency primitives) without requiring user-written glue code.
 - **FR-003**: System MUST propagate a root context to all stages and support graceful shutdown on context cancellation.
-- **FR-004**: System MUST provide a compile-time configuration API that makes invalid pipeline wiring difficult or impossible.
+- **FR-004**: System MUST provide a fluent configuration API that validates handler signatures and stage-to-stage type compatibility when building the pipeline (fail fast on invalid wiring).
 - **FR-005**: System MUST support both single-item handlers and batch handlers for processing stages.
 - **FR-005a**: Processor and sink handler signatures MUST operate on the raw payload type `T` (not `Feed[T]`) to minimize user boilerplate; `Feed[T]` is used internally for stage-to-stage transport.
 - **FR-006**: System MUST surface execution outcomes to callers, including success, cancellation, and error results.
@@ -126,6 +135,7 @@ Summarize how this feature complies with `.specify/memory/constitution.md`:
 - **FR-009b**: The API MUST allow overriding concurrency per stage at pipeline construction time.
 - **FR-010**: System MUST keep the core library free of non-standard-library runtime dependencies.
 - **FR-011**: System MUST provide at least one runnable example demonstrating a minimal source → processor → sink pipeline.
+- **FR-012**: System MUST support a sequential builder style that reads naturally left to right: `New(...).Then(...).To(...).Run(...)`.
 
 ### Assumptions
 

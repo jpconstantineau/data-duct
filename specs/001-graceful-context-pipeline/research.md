@@ -49,3 +49,13 @@ This document captures the key technical decisions for implementing the feature,
 - **Alternatives considered**:
   - Single `internal/` only: makes public API less discoverable.
   - `pkg/core/`: unclear naming; this feature is specifically pipeline orchestration.
+
+## Decision: Fluent builder API with build-time signature validation
+
+- **Decision**: Provide a fluent builder style that reads naturally left-to-right: `New(...).Then(...).To(...).Run(...)`.
+- **Rationale**: This is the most readable and ergonomic shape for typical Go users and matches how pipeline stages are conceptualized.
+- **Constraint encountered**: Go does not support generic methods on generic types, which prevents an idealized fully generic `(*Pipeline[T]).Then[U](...) *Pipeline[U]` fluent API.
+- **Implementation approach chosen**: Accept ordinary typed handler functions and validate their signatures and stage compatibility when stages are added, failing fast on invalid wiring.
+- **Alternatives considered**:
+  - Function-based generic API (`Then(p, handler)`) to keep compile-time type chaining: correct but less readable and explicitly disallowed by the desired example style.
+  - Interface-based untyped handlers (`func(context.Context, any) (any, error)`): simplest but pushes type casting to users and makes misuse easier.

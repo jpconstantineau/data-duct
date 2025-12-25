@@ -11,6 +11,8 @@ This contract describes the intended public API surface for the feature. It is n
 - `StartHandler[T any]`: `func(ctx context.Context) (T, error)`
 - `EndHandler[T any]`: `func(ctx context.Context, input T) error`
 
+Note: These generic handler type aliases describe the *intended shapes* of user-provided functions. The fluent builder accepts ordinary typed functions directly.
+
 ## Data Transport
 
 - Internal transport uses `Feed[T]`:
@@ -29,17 +31,24 @@ This contract describes the intended public API surface for the feature. It is n
 
 Goals:
 
-- Compile-time type safety across stages (`T0 -> T1 -> ... -> TN`)
+- Fluent, readable stage chaining (`New(...).Then(...).To(...)`)
+- Strong stage-to-stage compatibility checks when building the pipeline (fail fast on invalid wiring)
 - Minimal boilerplate for users
 - Defaults: concurrency=1 per stage
 
-Candidate shape (subject to refinement during implementation):
+Implemented shape:
 
-- `pipeline.New[T](name string, source func(context.Context) (<-chan T, error), opts ...Option) *Pipeline[T]`
-- `(*Pipeline[In]).Then[Out](handler Handler[In, Out], opts ...StageOption) *Pipeline[Out]`
-- `(*Pipeline[In]).ThenBatch[Out](handler BatchHandler[In, Out], batch BatchPolicy, opts ...StageOption) *Pipeline[Out]`
-- `(*Pipeline[T]).To(sink EndHandler[T], opts ...StageOption) *Runnable`
+- `pipeline.New[T](name string, source func(context.Context) (<-chan T, error), opts ...Option) *Pipeline`
+- `(*Pipeline).Then(handler func(context.Context, In) (Out, error), opts ...StageOption) *Pipeline`
+- `(*Pipeline).ThenBatch(handler func(context.Context, []In) ([]Out, error), batch BatchPolicy, opts ...StageOption) *Pipeline`
+- `(*Pipeline).To(sink func(context.Context, In) error, opts ...StageOption) *Runnable`
 - `(*Runnable).Run(ctx context.Context) (Result, error)`
+
+Validation:
+
+- The library validates each handler’s function signature when added.
+- The library validates that a stage’s input type matches the previous stage’s output type.
+- Invalid wiring fails fast (panic) during pipeline construction.
 
 ## Cancellation / Error Semantics
 

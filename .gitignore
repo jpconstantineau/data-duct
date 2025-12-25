@@ -27,6 +27,13 @@ go.work.sum
 # env file
 .env
 
+# Logs
+*.log
+
 # Editor/IDE
-# .idea/
-# .vscode/
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
