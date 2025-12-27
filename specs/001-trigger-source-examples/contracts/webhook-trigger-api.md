@@ -33,6 +33,10 @@ This contract describes the local HTTP API used by the webhook-trigger runnable 
   - `rest_api`
   - `observability`
 
+Notes:
+
+- `files` and `object_storage` represent the same datasource category (files/object storage).
+
 ## Response
 
 ### Success

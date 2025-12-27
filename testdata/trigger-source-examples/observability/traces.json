@@ -1,0 +1,5 @@
+[
+  {"trace_id":"t1","span_id":"s1","name":"root"},
+  {"trace_id":"t1","span_id":"s2","name":"db"},
+  {"trace_id":"t2","span_id":"s1","name":"root"}
+]

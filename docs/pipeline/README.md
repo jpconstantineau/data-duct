@@ -32,6 +32,20 @@ Use `ThenBatch` with a `BatchPolicy` to group items into deterministic batches. 
 go test ./...
 go run ./cmd/graceful-context-pipeline-example
 
+# trigger & source examples (see specs/001-trigger-source-examples/quickstart.md)
+go run ./cmd/trigger-interval
+go run ./cmd/trigger-daily
+go run ./cmd/trigger-webhook
+go run ./cmd/trigger-file-poll
+go run ./cmd/trigger-manual-run-now
+go run ./cmd/trigger-watchdog-sla
+
+go run ./cmd/source-files
+go run ./cmd/source-database-export
+go run ./cmd/source-warehouse-export
+go run ./cmd/source-rest-uselessfacts
+go run ./cmd/source-observability
+
 # lint (optional)
 ./scripts/ci/lint.ps1
 

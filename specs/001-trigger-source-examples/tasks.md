@@ -20,9 +20,9 @@
 
 **Purpose**: Add the minimal shared structure used by all examples.
 
-- [ ] T001 Create example support package skeleton in pkg/examplesupport/doc.go and pkg/examplesupport/types.go
-- [ ] T002 Create base fixture folders with placeholders in testdata/trigger-source-examples/exports/.gitkeep and testdata/trigger-source-examples/observability/.gitkeep
-- [ ] T003 [P] Add/extend docs entry listing new example commands in docs/pipeline/README.md
+- [x] T001 Create example support package skeleton in pkg/examplesupport/doc.go and pkg/examplesupport/types.go
+- [x] T002 Create base fixture folders with placeholders in testdata/trigger-source-examples/exports/.gitkeep and testdata/trigger-source-examples/observability/.gitkeep
+- [x] T003 [P] Add/extend docs entry listing new example commands in docs/pipeline/README.md
 
 ---
 
@@ -34,16 +34,16 @@
 
 ### Tests (write first)
 
-- [ ] T004 [P] Add unit tests for example event/data types in pkg/examplesupport/types_test.go
-- [ ] T005 [P] Add unit tests for coalescing backpressure controller in pkg/examplesupport/coalesce_test.go
-- [ ] T006 [P] Add unit tests for shared “process step” helper in pkg/examplesupport/process_test.go
+- [x] T004 [P] Add unit tests for example event/data types in pkg/examplesupport/types_test.go
+- [x] T005 [P] Add unit tests for coalescing backpressure controller in pkg/examplesupport/coalesce_test.go
+- [x] T006 [P] Add unit tests for shared “process step” helper in pkg/examplesupport/process_test.go
 
 ### Implementation
 
-- [ ] T007 Implement shared types (TriggerEvent, IngestionRequest, IngestionResult, AlertSignal) in pkg/examplesupport/types.go
-- [ ] T008 Implement coalescing runner (max one pending run) in pkg/examplesupport/coalesce.go
-- [ ] T009 Implement a reusable process-step adapter used by trigger examples in pkg/examplesupport/process.go
-- [ ] T010 Add a small helper for consistent CLI output formatting in pkg/examplesupport/output.go
+- [x] T007 Implement shared types (TriggerEvent, IngestionRequest, IngestionResult, AlertSignal) in pkg/examplesupport/types.go
+- [x] T008 Implement coalescing runner (max one pending run) in pkg/examplesupport/coalesce.go
+- [x] T009 Implement a reusable process-step adapter used by trigger examples in pkg/examplesupport/process.go
+- [x] T010 Add a small helper for consistent CLI output formatting in pkg/examplesupport/output.go
 
 **Checkpoint**: Foundation ready — trigger examples can now be implemented consistently.
 
@@ -57,15 +57,15 @@
 
 ### Tests for User Story 1 (REQUIRED) ⚠️
 
-- [ ] T011 [P] [US1] Add tests for daily HH:MM next-run calculation in pkg/examplesupport/schedule_test.go
-- [ ] T012 [P] [US1] Add tests for interval trigger run loop behavior in pkg/examplesupport/interval_test.go
+- [x] T011 [P] [US1] Add tests for daily HH:MM next-run calculation in pkg/examplesupport/schedule_test.go
+- [x] T012 [P] [US1] Add tests for interval trigger run loop behavior in pkg/examplesupport/interval_test.go
 
 ### Implementation for User Story 1
 
-- [ ] T013 [US1] Implement daily HH:MM next-run calculation in pkg/examplesupport/schedule.go
-- [ ] T014 [US1] Implement interval trigger loop helper in pkg/examplesupport/interval.go
-- [ ] T015 [US1] Add runnable interval trigger example in cmd/trigger-interval/main.go
-- [ ] T016 [US1] Add runnable daily HH:MM trigger example in cmd/trigger-daily/main.go
+- [x] T013 [US1] Implement daily HH:MM next-run calculation in pkg/examplesupport/schedule.go
+- [x] T014 [US1] Implement interval trigger loop helper in pkg/examplesupport/interval.go
+- [x] T015 [US1] Add runnable interval trigger example in cmd/trigger-interval/main.go
+- [x] T016 [US1] Add runnable daily HH:MM trigger example in cmd/trigger-daily/main.go
 
 **Checkpoint**: US1 examples run and demonstrate schedule triggering.
 
@@ -79,15 +79,15 @@
 
 ### Tests for User Story 2 (REQUIRED) ⚠️
 
-- [ ] T017 [P] [US2] Add tests for webhook request validation/parsing in pkg/examplesupport/webhook_test.go
-- [ ] T018 [P] [US2] Add tests for manual trigger request construction in pkg/examplesupport/manual_test.go
+- [x] T017 [P] [US2] Add tests for webhook request validation/parsing in pkg/examplesupport/webhook_test.go
+- [x] T018 [P] [US2] Add tests for manual trigger request construction in pkg/examplesupport/manual_test.go
 
 ### Implementation for User Story 2
 
-- [ ] T019 [US2] Implement webhook trigger HTTP handler and request parsing in pkg/examplesupport/webhook.go
-- [ ] T020 [US2] Implement manual run-now helper in pkg/examplesupport/manual.go
-- [ ] T021 [US2] Add runnable webhook trigger example in cmd/trigger-webhook/main.go
-- [ ] T022 [US2] Add runnable manual run-now example in cmd/trigger-manual-run-now/main.go
+- [x] T019 [US2] Implement webhook trigger HTTP handler and request parsing in pkg/examplesupport/webhook.go
+- [x] T020 [US2] Implement manual run-now helper in pkg/examplesupport/manual.go
+- [x] T021 [US2] Add runnable webhook trigger example in cmd/trigger-webhook/main.go
+- [x] T022 [US2] Add runnable manual run-now example in cmd/trigger-manual-run-now/main.go
 
 **Checkpoint**: US2 examples run and demonstrate event-driven triggering.
 
@@ -101,15 +101,15 @@
 
 ### Tests for User Story 3 (REQUIRED) ⚠️
 
-- [ ] T023 [P] [US3] Add tests for file polling “do not reprocess” behavior in pkg/examplesupport/filepoll_test.go
-- [ ] T024 [P] [US3] Add tests for watchdog deadline detection and alert emission in pkg/examplesupport/watchdog_test.go
+- [x] T023 [P] [US3] Add tests for file polling “do not reprocess” behavior in pkg/examplesupport/filepoll_test.go
+- [x] T024 [P] [US3] Add tests for watchdog deadline detection and alert emission in pkg/examplesupport/watchdog_test.go
 
 ### Implementation for User Story 3
 
-- [ ] T025 [US3] Implement file polling utilities (scan, filter, seen-set) in pkg/examplesupport/filepoll.go
-- [ ] T026 [US3] Implement watchdog deadline monitor that emits AlertSignal into pipeline in pkg/examplesupport/watchdog.go
-- [ ] T027 [US3] Add runnable file polling trigger example in cmd/trigger-file-poll/main.go
-- [ ] T028 [US3] Add runnable watchdog/SLA example in cmd/trigger-watchdog-sla/main.go
+- [x] T025 [US3] Implement file polling utilities (scan, filter, seen-set) in pkg/examplesupport/filepoll.go
+- [x] T026 [US3] Implement watchdog deadline monitor that emits AlertSignal into pipeline in pkg/examplesupport/watchdog.go
+- [x] T027 [US3] Add runnable file polling trigger example in cmd/trigger-file-poll/main.go
+- [x] T028 [US3] Add runnable watchdog/SLA example in cmd/trigger-watchdog-sla/main.go
 
 **Checkpoint**: US3 examples run and demonstrate polling + alerting.
 
@@ -123,28 +123,28 @@
 
 ### Testdata fixtures (write first where possible)
 
-- [ ] T029 [P] Create DB export fixture in testdata/trigger-source-examples/exports/db-export.csv
-- [ ] T030 [P] Create warehouse export fixture in testdata/trigger-source-examples/exports/warehouse-export.csv
-- [ ] T031 [P] Create observability log fixture in testdata/trigger-source-examples/observability/app.log
-- [ ] T032 [P] Create observability trace export fixture in testdata/trigger-source-examples/observability/traces.json
+- [x] T029 [P] Create DB export fixture in testdata/trigger-source-examples/exports/db-export.csv
+- [x] T030 [P] Create warehouse export fixture in testdata/trigger-source-examples/exports/warehouse-export.csv
+- [x] T031 [P] Create observability log fixture in testdata/trigger-source-examples/observability/app.log
+- [x] T032 [P] Create observability trace export fixture in testdata/trigger-source-examples/observability/traces.json
 
 ### Ingestion helper tests (REQUIRED)
 
-- [ ] T033 [P] Add tests for CSV/JSON parsing helpers in pkg/examplesupport/ingest_test.go
-- [ ] T034 [P] Add tests for REST uselessfacts response parsing in pkg/examplesupport/rest_uselessfacts_test.go
+- [x] T033 [P] Add tests for CSV/JSON parsing helpers in pkg/examplesupport/ingest_test.go
+- [x] T034 [P] Add tests for REST uselessfacts response parsing in pkg/examplesupport/rest_uselessfacts_test.go
 
 ### Ingestion helper implementation
 
-- [ ] T035 Implement CSV/JSON ingestion helpers in pkg/examplesupport/ingest.go
-- [ ] T036 Implement uselessfacts REST fetch + parse helper (stdlib only) in pkg/examplesupport/rest_uselessfacts.go
+- [x] T035 Implement CSV/JSON ingestion helpers in pkg/examplesupport/ingest.go
+- [x] T036 Implement uselessfacts REST fetch + parse helper (stdlib only) in pkg/examplesupport/rest_uselessfacts.go
 
 ### Runnable datasource examples
 
-- [ ] T037 Add files/object storage stand-in ingestion example in cmd/source-files/main.go
-- [ ] T038 Add database export ingestion example in cmd/source-database-export/main.go
-- [ ] T039 Add warehouse export ingestion example in cmd/source-warehouse-export/main.go
-- [ ] T040 Add REST API ingestion example using uselessfacts endpoint in cmd/source-rest-uselessfacts/main.go
-- [ ] T041 Add observability ingestion example (logs + traces; optional metrics URL) in cmd/source-observability/main.go
+- [x] T037 Add files/object storage stand-in ingestion example in cmd/source-files/main.go
+- [x] T038 Add database export ingestion example in cmd/source-database-export/main.go
+- [x] T039 Add warehouse export ingestion example in cmd/source-warehouse-export/main.go
+- [x] T040 Add REST API ingestion example using uselessfacts endpoint in cmd/source-rest-uselessfacts/main.go
+- [x] T041 Add observability ingestion example (logs + traces; optional metrics URL) in cmd/source-observability/main.go
 
 ---
 
@@ -152,12 +152,13 @@
 
 **Purpose**: Ensure everything is discoverable, deterministic, and passes quality gates.
 
-- [ ] T042 Update quickstart references (if needed) in specs/001-trigger-source-examples/quickstart.md
-- [ ] T048 [P] [US2] Add tests for webhook response contract (status + JSON body) in pkg/examplesupport/webhook_contract_test.go
-- [ ] T049 Ensure docs/contracts align with fixtures and commands (update specs/001-trigger-source-examples/quickstart.md and specs/001-trigger-source-examples/contracts/examples-cli.md)
-- [ ] T043 [P] Add a short section listing all new commands in docs/pipeline/README.md
-- [ ] T044 Run gofmt on pkg/examplesupport/*.go and cmd/*/main.go
-- [ ] T045 Run unit tests via `go test` for pkg/examplesupport/* and fix any failures
+- [x] T042 Update quickstart references (if needed) in specs/001-trigger-source-examples/quickstart.md
+- [x] T048 [P] [US2] Add tests for webhook response contract (status + JSON body) in pkg/examplesupport/webhook_contract_test.go
+- [x] T049 Ensure docs/contracts align with fixtures and commands (update specs/001-trigger-source-examples/quickstart.md and specs/001-trigger-source-examples/contracts/examples-cli.md)
+- [x] T043 [P] Add a short section listing all new commands in docs/pipeline/README.md
+- [x] T044 Run gofmt on pkg/examplesupport/*.go and cmd/*/main.go
+- [x] T045 Run unit tests via `go test` for pkg/examplesupport/* and fix any failures
+- [x] T050 [P] Verify no new module dependencies were introduced (run `go mod tidy` and confirm go.mod and go.sum unchanged)
 - [ ] T046 (Optional) Run scripts/ci/lint.ps1 and address any new lint issues
 - [ ] T047 (Optional) Run scripts/ci/vuln.ps1 and address any actionable findings
 
