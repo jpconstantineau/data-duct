@@ -109,9 +109,10 @@ This feature is example-focused and keeps the library boundary intact. Examples 
 - **FR-001**: The repository MUST include runnable examples that demonstrate each of the following trigger styles: interval schedule, daily at $HH:MM$, webhook/API event, file-availability polling, manual “run now”, and watchdog/SLA deadline.
 - **FR-002**: Each trigger example MUST initiate ingestion by sending a message/event to a “process” step (or equivalent) that performs datasource connection and ingestion.
 - **FR-003**: Trigger examples MUST clearly define behavior when a trigger fires while a previous ingestion run is still in progress. The default behavior MUST be **coalesce**: allow at most one pending run; multiple triggers collapse into one follow-up run.
-- **FR-004**: The repository MUST include runnable examples that demonstrate ingestion from each of the following datasource categories: files in a folder, object storage (via dependency-free access patterns), databases, data warehouses, REST APIs, and observability data (metrics, traces, logs).
+- **FR-004**: The repository MUST include runnable examples that demonstrate ingestion from each of the following datasource categories: files/object storage (via dependency-free access patterns, e.g., local folder stand-in), databases, data warehouses, REST APIs, and observability data (metrics, traces, logs).
 - **FR-005**: Examples MUST NOT add third-party libraries; if a datasource category typically requires third-party dependencies, the example MUST use a dependency-free approach (such as ingesting exported data, using vendor-neutral file formats, or consuming an HTTP endpoint).
 - **FR-006**: Webhook/API-triggered ingestion MUST validate that an incoming request is well-formed and MUST respond with a clear success/failure outcome.
+- **FR-006a**: The webhook example MUST document how to send a local test request and what output indicates a successful cycle.
 - **FR-007**: File-availability polling MUST detect new data within a configurable polling interval and MUST avoid re-ingesting the same file by default.
 - **FR-008**: Watchdog/SLA behavior MUST produce an explicit alert signal event in the pipeline when expected data does not arrive before a configured deadline. The example MUST still exit 0, but MUST print a clear “ALERT” outcome.
 - **FR-009**: Each example MUST produce human-readable output that makes it obvious when ingestion ran, what it ingested (at a high level), and whether it succeeded or failed.
@@ -148,7 +149,7 @@ This feature is example-focused and keeps the library boundary intact. Examples 
 
 ### Measurable Outcomes
 
-- **SC-001**: At least 6 runnable trigger examples exist (one per listed trigger style) and each completes a single ingestion run successfully in under 30 seconds in a default configuration.
+- **SC-001**: At least 6 runnable trigger examples exist (one per listed trigger style) and each demonstrates a clear successful cycle in under 30 seconds in a default configuration (service-like examples such as webhook must be manually exercisable and show a clear success path).
 - **SC-002**: At least 5 runnable datasource examples exist (covering all listed datasource categories), each producing an ingestion summary and a clear success/failure status.
 - **SC-003**: Zero third-party libraries are required to build and run all examples.
-- **SC-004**: For each example, a user can run it and observe a deterministic outcome (success/failure/alert) without requiring external infrastructure (using simulated or local inputs by default).
+- **SC-004**: For each example, a user can run it and observe a deterministic outcome (success/failure/alert) without requiring external infrastructure (using simulated or local inputs by default). Exception: the REST API datasource example requires internet access and may fail if the endpoint is unavailable.
